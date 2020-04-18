@@ -1,0 +1,20 @@
+
+{
+	"Print to myComponent": {
+        "prefix": "MyComponent",
+        "body": [ 
+            "import React from 'react'",
+            "",
+            "export default class ClassName extends React.Component {",
+            "",
+            "  render() {",
+            "",
+            "    return (",
+            "      <div></div>",
+            "    );",
+            "  }",
+            "}", 
+        ],
+        "description": "Log output to console"
+    }
+}
