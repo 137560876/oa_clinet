@@ -10,6 +10,7 @@ export default class App extends React.Component {
   render() {
     return (
       <BrowserRouter>
+        <Route path="/" component={Login}></Route>
         <Route path="/login" component={Login}></Route>
         <Route path="/admin" component={Admin}></Route>
       </BrowserRouter>
