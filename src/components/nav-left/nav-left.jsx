@@ -1,72 +1,92 @@
 import React from 'react'
 import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
+import menuList from '../../config/menuConfig';
+
 const { SubMenu } = Menu;
 const { Sider } = Layout;
+const iconList = [
+  <UserOutlined />,
+  <LaptopOutlined />,
+  <NotificationOutlined />
+]
 
-export default class NavLeft extends React.Component {
+
+class NavLeft extends React.Component {
+
+  /**
+   * 根据menuList的数组生成菜单
+   */
+  getMenuNodes = (menuList) => {
+
+    const path = this.props.location.pathname;
+
+    return menuList.map(item => {
+      let iconNum = item.icon;
+      if (!item.children) {
+        return (
+          <Menu.Item key={item.key}>
+            <Link to={item.key}>
+              <span>
+                {iconList[iconNum]}
+                {item.title}
+              </span>
+            </Link>
+          </Menu.Item>
+        );
+      } else {
+
+        const cItem = item.children.find(cItem => cItem.key === path)
+        if (cItem) {
+          this.openKey = item.key;
+        }
+
+        return (
+          <SubMenu
+            key={item.key}
+            title={
+              <span>
+                {iconList[iconNum]}
+                {item.title}
+              </span>
+            }
+          >
+            {this.getMenuNodes(item.children)}
+          </SubMenu>
+        );
+      }
+    })
+  }
+
+  UNSAFE_componentWillMount () {
+    this.menuNodes = this.getMenuNodes(menuList);
+  }
 
   render() {
+
+    const path = this.props.location.pathname;
+    const openKey = this.openKey;
 
     return (
       <Sider width={200} className="site-layout-background">
         <Menu
           mode="inline"
-          defaultSelectedKeys={['myhome']}
-          defaultOpenKeys={['sub1']}
+          selectedKeys={[path]}
+          defaultOpenKeys={[openKey]}
           style={{ height: '100%', borderRight: 0 }}
         >
-          <SubMenu
-            key="sub1"
-            title={
-              <span>
-                <UserOutlined />
-                subnav 1
-              </span>
-            }
-          >
-            <Menu.Item key="myhome">
-              <Link to='/myhome'>
-                <span>我的信息</span>
-              </Link>
-            </Menu.Item>
-            <Menu.Item key="flow">
-              <Link to='/flow'>
-                <span>工作流程</span>
-              </Link>
-            </Menu.Item>
-          </SubMenu>
-          <SubMenu
-            key="sub2"
-            title={
-              <span>
-                <LaptopOutlined />
-            subnav 2
-          </span>
-            }
-          >
-            <Menu.Item key="5">option5</Menu.Item>
-            <Menu.Item key="6">option6</Menu.Item>
-            <Menu.Item key="7">option7</Menu.Item>
-            <Menu.Item key="8">option8</Menu.Item>
-          </SubMenu>
-          <SubMenu
-            key="sub3"
-            title={
-              <span>
-                <NotificationOutlined />
-            subnav 3
-          </span>
-            }
-          >
-            <Menu.Item key="9">option9</Menu.Item>
-            <Menu.Item key="10">option10</Menu.Item>
-            <Menu.Item key="11">option11</Menu.Item>
-            <Menu.Item key="12">option12</Menu.Item>
-          </SubMenu>
+          {
+            this.menuNodes
+          }
+
         </Menu>
       </Sider>
     );
   }
 }
+
+/**
+ * 用withRouter包装让NavLeft获得history等3个属性
+ */
+export default withRouter(NavLeft);

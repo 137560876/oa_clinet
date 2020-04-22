@@ -8,7 +8,7 @@ export default class HeaderTop extends React.Component {
   render() {
 
     return (
-      <Header className="header">
+      <Header className="header" style={{background: "#4B5162"}}>
         <div className="logo" />
       </Header>
     );
