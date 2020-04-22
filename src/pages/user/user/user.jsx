@@ -1,16 +1,19 @@
+/**
+ * @description: 管理组件
+ */
+
 import React from 'react';
 import './user.less';
 import memoryUtils from '../../../utils/memoryUtils';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { Layout, Breadcrumb } from 'antd';
 
 import NavLeft from '../../../components/nav-left/nav-left';
 import HeaderTop from '../../../components/header/header'
-const { Content } = Layout;
+import MyHome from '../../inner-page/my-home/my-home';
+import Flow from '../../inner-page/flow/flow';
 
-/**
- * @description: 管理组件
- */
+const { Content } = Layout;
 
 export default class Admin extends React.Component {
 
@@ -33,15 +36,13 @@ export default class Admin extends React.Component {
                 <Breadcrumb.Item>List</Breadcrumb.Item>
                 <Breadcrumb.Item>App</Breadcrumb.Item>
               </Breadcrumb>
-              <Content
-                className="site-layout-background"
-                style={{
-                  padding: 24,
-                  margin: 0,
-                  minHeight: 280,
-                }}
-              >
-                Content
+              <Content className="site-layout-background" style={{ padding: 24, margin: 0, minHeight: 280, }}>
+                {/* 子路由 */}
+                <Switch>
+                  <Route path='/myhome' component={MyHome}></Route>
+                  <Route path='/flow' component={Flow}></Route>
+                  <Redirect to='/myhome'></Redirect>
+                </Switch>
               </Content>
             </Layout>
           </Layout>

@@ -1,6 +1,7 @@
 import React from 'react'
 import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons';
-import { Layout, Menu} from 'antd';
+import { Layout, Menu } from 'antd';
+import { Link } from 'react-router-dom';
 const { SubMenu } = Menu;
 const { Sider } = Layout;
 
@@ -9,10 +10,10 @@ export default class NavLeft extends React.Component {
   render() {
 
     return (
-        <Sider width={200} className="site-layout-background">
+      <Sider width={200} className="site-layout-background">
         <Menu
           mode="inline"
-          defaultSelectedKeys={['1']}
+          defaultSelectedKeys={['myhome']}
           defaultOpenKeys={['sub1']}
           style={{ height: '100%', borderRight: 0 }}
         >
@@ -21,14 +22,20 @@ export default class NavLeft extends React.Component {
             title={
               <span>
                 <UserOutlined />
-            subnav 1
-          </span>
+                subnav 1
+              </span>
             }
           >
-            <Menu.Item key="1">option1</Menu.Item>
-            <Menu.Item key="2">option2</Menu.Item>
-            <Menu.Item key="3">option3</Menu.Item>
-            <Menu.Item key="4">option4</Menu.Item>
+            <Menu.Item key="myhome">
+              <Link to='/myhome'>
+                <span>我的信息</span>
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="flow">
+              <Link to='/flow'>
+                <span>工作流程</span>
+              </Link>
+            </Menu.Item>
           </SubMenu>
           <SubMenu
             key="sub2"
