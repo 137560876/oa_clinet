@@ -55,7 +55,7 @@ export default class Login extends React.Component {
         const user = result
         memoryUtils.user = user;
         storageUtils.saveUser(user);
-        this.props.history.replace('/admin');
+        this.props.history.replace('/user');
       } else {
         message.error("登录失败，用户名或密码不正确");
       }
@@ -69,7 +69,7 @@ export default class Login extends React.Component {
     //用户已登录自动跳转到管理
     const user = memoryUtils.user;
     if (user && user.id) {
-      return <Redirect to='/admin' />
+      return <Redirect to='/user' />
     }
 
     return (
