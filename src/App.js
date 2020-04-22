@@ -3,7 +3,7 @@ import "./App.css";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import Login from "./pages/user/login/login";
-import Admin from "./pages/user/admin/admin";
+import User from "./pages/user/user/user";
 
 export default class App extends React.Component {
   render() {
@@ -11,7 +11,7 @@ export default class App extends React.Component {
       <BrowserRouter>
         <Switch>
           <Route path="/login" component={Login}></Route>
-          <Route path="/admin" component={Admin}></Route>
+          <Route path="/user" component={User}></Route>
           <Route path="/" component={Login}></Route>
         </Switch>
       </BrowserRouter>
