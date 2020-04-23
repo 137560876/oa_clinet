@@ -1,0 +1,107 @@
+.head {
+  position: relative;
+  z-index: 9999;
+  box-shadow: 0px 0px 3px 5px rgba(0, 0, 0, 0.1);
+  
+
+  .logo {
+    float: left;
+    width: 120px;
+    height: 64px;
+    background: url(../../image/logo.png) no-repeat;
+    background-size: cover;
+    margin-left: -15px;
+  }
+
+  .my-info {
+    position: relative;
+    float: right;
+    display: flex;
+    width: 120px;
+    height: 64px;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .my-info .img-container {
+    display: flex;
+    z-index: 2;
+    position: absolute;
+    width: 120px;
+    height: 64px;
+    top: 0px;
+    justify-content: center;
+    align-items: center;
+    transition: top 0.4s ease-in-out 0.4s;
+  }
+
+  .my-info .info-detail {
+    position: absolute;
+    z-index: 1;
+    background: #fff;
+    width: 120px;
+    height: 140px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    top: -36px;
+    transition: top 0.4s ease-in-out, opacity 0.1s ease-in-out 0.3s;
+  }
+
+  .my-info:hover .info-detail {
+    top: 50px;
+    opacity: 1;
+  }
+
+  .my-info:hover .img-container {
+    top: 10px;
+  }
+
+  .my-info .info-detail .space {
+    height: 20px;
+  }
+
+  .my-info .info-detail .line {
+    width: 90%;
+    height: 1px;
+    background: rgb(2, 2, 2);
+    opacity: 0.1;
+    margin: 0 auto;
+  }
+
+  .my-info .info-detail .my-name {
+    display: flex;
+    width: 100%;
+    height: 40px;
+    border-radius: 5px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .my-info .info-detail .my-name span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 25px;
+    border-bottom: 2px solid #fb7299;
+    font: Microsoft YaHei;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .my-info .info-detail .content {
+    display: flex;
+    width: 100%;
+    height: 40px;
+    border-radius: 5px;
+    justify-content: center;
+    align-items: center;
+    transition: 0.2s ease-in-out;
+    cursor: pointer;
+  }
+
+  .my-info .info-detail .content:hover {
+    background: rgb(235, 234, 234);
+  }
+}

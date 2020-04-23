@@ -69,7 +69,7 @@ class NavLeft extends React.Component {
     const openKey = this.openKey;
 
     return (
-      <Sider width={200} className="site-layout-background">
+      <Sider width={200} className="site-layout-background" style={{paddingTop: "28px"}}>
         <Menu
           mode="inline"
           selectedKeys={[path]}
