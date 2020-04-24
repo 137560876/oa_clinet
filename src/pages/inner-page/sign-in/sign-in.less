@@ -1,0 +1,131 @@
+.sign-in {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  .site-calendar-demo-card {
+    width: 500px;
+    min-width: 450px;
+    padding: 10px;
+    border: 1px solid #f0f0f0;
+    border-radius: 2px;
+    margin-left: 60px;
+    margin-right: 20px;
+  }
+
+  .run-container {
+    width: 550px;
+    position: relative;
+    justify-content: center; 
+    height: 500px;
+    padding: 10px;
+    margin-left: auto;
+    margin-right: 40px;
+  }
+
+  .run-container .main-des {
+    height: 30px;
+    padding-right: 25px;
+    text-align: right;
+    font-family: "Microsoft YaHei";
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .run-container .num-contanier {
+    margin: 0 auto;
+    overflow: auto;
+  }
+
+
+
+  .run-container .num-contanier .box-card {
+    float: right;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 25px;
+    margin-right: 25px;
+  }
+
+  .run-container .time-container {
+    position: absolute;
+    bottom: 0px;
+    display: flex;
+    justify-content: center; /* 水平居中 */
+    align-items: center; /* 垂直居中 */
+    height: 60px;
+    border-radius: 8px;
+    margin-top: 30px;
+    font-family: "Microsoft YaHei";
+    font-size: 20px;
+    font-weight: 600;
+    left: 50%;
+    transform: translate(-50%, 0px);
+  }
+
+  .run-container .bt-container {
+    position: absolute;
+    bottom: 90px;
+    width: 180px;
+    height: 90px;
+    left: 50%;
+    transform: translate(-50%, 0px);
+  }
+
+  .run-container .bt-container .my-button {
+    position: absolute;
+    text-decoration: none;
+    font-size: 24px;
+    background: linear-gradient(90deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
+    background-size: 400%;
+    width: 180px;
+    height: 90px;
+    color: #fff;
+    line-height: 90px;
+    text-align: center;
+    border: 0px;
+    outline:none;
+    border-radius: 45px;
+    z-index: 2;
+    cursor: pointer;
+
+  }
+
+  .run-container .bt-container .bg {
+    position: absolute;
+    width: 180px;
+    height: 90px;
+    background: linear-gradient(90deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
+    background-size: 400%;
+    border-radius: 45px;
+    filter: blur(10px);
+    z-index: 1;
+  }
+
+  .run-container .bt-container .my-button:hover {
+    animation: sun 8s infinite;
+  }
+  .run-container .bt-container .my-button:hover .bg {
+    animation: sun 8s infinite;
+  }
+
+  @keyframes sun {
+    100% {
+      background-position: -400% 0;
+    }
+  }
+  
+
+  .ant-picker-calendar-date-content {
+    height: 30px !important;
+  }
+
+  .test1 {
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    z-index: -1;
+    top: 0px;
+    background-color: red;
+    border-radius: 2px;
+  }
+}

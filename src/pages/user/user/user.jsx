@@ -12,6 +12,7 @@ import NavLeft from '../../../components/nav-left/nav-left';
 import HeaderTop from '../../../components/header/header'
 import MyHome from '../../inner-page/my-home/my-home';
 import Flow from '../../inner-page/flow/flow';
+import SignIn from '../../inner-page/sign-in/sign-in';
 
 const { Content } = Layout;
 
@@ -36,6 +37,7 @@ export default class User extends React.Component {
               <Content className="site-layout-background" style={{ padding: 24, margin: 0, minHeight: 280, }}>
                 {/* 子路由 */}
                 <Switch>
+                  <Route path='/sign' component={SignIn}></Route>
                   <Route path='/myhome' component={MyHome}></Route>
                   <Route path='/flow' component={Flow}></Route>
                   <Redirect to='/myhome'></Redirect>

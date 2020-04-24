@@ -21,6 +21,11 @@ const menuList = [
           icon: '1',
       }
     ]
+  },
+  {
+    title: '签到',
+    key: '/sign',
+    icon: '2',
   }
 ];
 
