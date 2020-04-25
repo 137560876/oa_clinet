@@ -26,6 +26,11 @@ const menuList = [
     title: '签到',
     key: '/sign',
     icon: '2',
+  },
+  {
+    title: '人员',
+    key: '/person',
+    icon: '0',
   }
 ];
 

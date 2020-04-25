@@ -5,6 +5,11 @@ import { reqlogin } from '../../../api/link';
 import memoryUtils from '../../../utils/memoryUtils';
 import storageUtils from '../../../utils/strorageUtils';
 import { Redirect } from 'react-router-dom';
+
+//引入mock
+
+import { test } from '../../../mock/loginMock'
+
 /**
  * @description: 登录的路由组件
  */
@@ -39,13 +44,13 @@ export default class Login extends React.Component {
 
   //点击登录事件
   async handleClick() {
+    test();
     let username = this.username.value;
     let password = this.password.value;
     //前台判断是否符合标准
     if (this.isInputRight()) {
       //发送到服务器检测
       const response = await reqlogin(username, password)
-      console.log(response)
       //判断登录是否成功
       const result = response;
       if (result.statu === 200) {
@@ -65,12 +70,15 @@ export default class Login extends React.Component {
     } 
   }
 
+
   render() {
     //用户已登录自动跳转到管理
     const user = memoryUtils.user;
     if (user && user.id) {
       return <Redirect to='/user' />
     }
+
+    //test()
 
     return (
       <div className="login">

@@ -13,6 +13,7 @@ import HeaderTop from '../../../components/header/header'
 import MyHome from '../../inner-page/my-home/my-home';
 import Flow from '../../inner-page/flow/flow';
 import SignIn from '../../inner-page/sign-in/sign-in';
+import Person from '../../inner-page/person/person';
 
 const { Content } = Layout;
 
@@ -40,6 +41,7 @@ export default class User extends React.Component {
                   <Route path='/sign' component={SignIn}></Route>
                   <Route path='/myhome' component={MyHome}></Route>
                   <Route path='/flow' component={Flow}></Route>
+                  <Route Path='/person' component={Person}></Route>
                   <Redirect to='/myhome'></Redirect>
                 </Switch>
               </Content>
