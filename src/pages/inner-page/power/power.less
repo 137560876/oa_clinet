@@ -1,0 +1,68 @@
+.power {
+  display: flex;
+
+  .person-list {
+    width: 280px;
+    height: 552px;
+    min-width: 280px;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    box-shadow: 1px 4px 4px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-left: 30px;
+  }
+
+  .icon-container {
+    display: flex;
+    width: 130px;
+    justify-content: center; /* 水平居中 */
+    align-items: center; /* 垂直居中 */
+  }
+
+  .power-list {
+    width: 300px;
+    height: 552px;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    box-shadow: 1px 4px 4px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-right: 40px;
+  }
+
+  .bt-container {
+    width: 150px;
+    height: 100px;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    margin-top: auto;
+    margin-bottom: 0px;
+  }
+
+  //修改滚动条样式
+  .person-list .ant-tree-list::-webkit-scrollbar-track {
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2) inset;
+    border-radius: 999px;
+    border: 5px solid transparent;
+  }
+
+  .person-list .ant-tree-list::-webkit-scrollbar {
+    width: 15px;
+    height: 15px;
+  }
+
+  .person-list .ant-tree-list::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    border: 5px solid transparent;
+    box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.2) inset;
+    min-height: 20px;
+    background-clip: content-box;
+  }
+
+  .person-list .ant-tree-list::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+}

@@ -31,6 +31,11 @@ const menuList = [
     title: '人员',
     key: '/person',
     icon: '0',
+  },
+  {
+    title: '权限',
+    key: '/power',
+    icon: '1',
   }
 ];
 
