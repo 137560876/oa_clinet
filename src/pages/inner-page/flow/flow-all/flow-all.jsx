@@ -1,8 +1,10 @@
 import React from 'react';
-import { Card, Table, Button, Modal } from 'antd';
+import { Card, Table, Button, Modal, Descriptions, Timeline } from 'antd';
 import { getFlow } from '../../../../mock/loginMock';
 import { reqFlowList } from '../../../../api/link';
+import TimeDiv from '../../../../components/time-line-div/time-line-div';
 import './flow-all.less';
+
 
 export default class FlowAll extends React.Component {
   constructor(props) {
@@ -51,7 +53,7 @@ export default class FlowAll extends React.Component {
     this.setState({
       visible: true,
     })
-    
+
 
   }
 
@@ -115,14 +117,59 @@ export default class FlowAll extends React.Component {
     return (
       <div className='flow-all'>
         <Modal
-          title="Basic Modal"
+          title="流程详情信息"
+          width="800px"
           visible={this.state.visible}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
         >
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
+          <Card>
+            <Descriptions
+              column={{ xxl: 2, xl: 2, lg: 2, md: 2, sm: 2, xs: 1 }}
+            >
+              <Descriptions.Item label="任务标题">申请</Descriptions.Item>
+              <Descriptions.Item label="流程编码">i1234</Descriptions.Item>
+              <Descriptions.Item label="发起人">阿秀</Descriptions.Item>
+              <Descriptions.Item label="流程类型">请假</Descriptions.Item>
+              <Descriptions.Item label="流程状态">结束</Descriptions.Item>
+              <Descriptions.Item label="所属部门">测试平台开发部</Descriptions.Item>
+              <Descriptions.Item label="开始时间">2020-4-15 18:30</Descriptions.Item>
+              <Descriptions.Item label="更新时间">2020-4-16 19:40</Descriptions.Item>
+              <Descriptions.Item label="流程备注">
+                因要回家一趟申请请假14年
+                </Descriptions.Item>
+            </Descriptions>
+
+          </Card>
+          <div style={{ height: "10px" }}></div>
+          <Card style={{ paddingLeft: '15px', paddingRight: '15px' }}>
+            <Timeline>
+              <Timeline.Item color="green">
+                <TimeDiv
+                  view={"发起"}
+                  person={"阿秀"}
+                  type={"移动应用开发部主管"}
+                  time={"2020-4-1 16:30"}
+                />
+              </Timeline.Item>
+              <Timeline.Item color="green">
+                <TimeDiv
+                  view={"同意，加油"}
+                  person={"小青"}
+                  type={"移动应用开发部主管"}
+                  time={"2020-4-1 16:30"}
+                />
+              </Timeline.Item>
+              <Timeline.Item color="red">
+                <TimeDiv
+                  view={"退回，假种信息不正确"}
+                  person={"阿秀"}
+                  type={"部门经理"}
+                  time={"2020-4-1 16:30"}
+                />
+              </Timeline.Item>
+            </Timeline>
+          </Card>
         </Modal>
         <Card title="全部流程列表" >
           <Table
