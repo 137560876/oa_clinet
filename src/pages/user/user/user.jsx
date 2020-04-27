@@ -11,10 +11,15 @@ import { Layout, Breadcrumb } from 'antd';
 import NavLeft from '../../../components/nav-left/nav-left';
 import HeaderTop from '../../../components/header/header'
 import MyHome from '../../inner-page/my-home/my-home';
-import Flow from '../../inner-page/flow/flow';
+import Flow from '../../inner-page/flow/myflow/flow';
+import FlowAll from '../../inner-page/flow/flow-all/flow-all';
+import FlowApply from '../../inner-page/flow/flow-apply/flow-apply';
+import FlowApro from '../../inner-page/flow/flow-apro/flow-apro';
+
 import SignIn from '../../inner-page/sign-in/sign-in';
 import Person from '../../inner-page/person/person';
 import Power from '../../inner-page/power/power';
+
 
 const { Content } = Layout;
 
@@ -41,7 +46,10 @@ export default class User extends React.Component {
                 <Switch>
                   <Route path='/sign' component={SignIn}></Route>
                   <Route path='/myhome' component={MyHome}></Route>
-                  <Route path='/flow' component={Flow}></Route>
+                  <Route path='/myflow' component={Flow}></Route>
+                  <Route path='/flowapply' component={FlowApply}></Route>
+                  <Route path='/flowall' component={FlowAll}></Route>
+                  <Route path='/flowapro' component={FlowApro}></Route>
                   <Route path='/person' component={Person}></Route>
                   <Route path='/power' component={Power}></Route>
                   <Redirect to='/myhome'></Redirect>
