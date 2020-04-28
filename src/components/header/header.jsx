@@ -1,5 +1,5 @@
 import React from 'react'
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { Layout, Modal } from 'antd';
 import { Avatar } from 'antd';
 import { UserOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
@@ -62,7 +62,11 @@ class HeaderTop extends React.Component {
               <div className="my-name">
                 <span>{this.userName}</span>
               </div>
-              <div className="content">个人中心</div>
+              <div className="content">
+                <Link to="/myhome">
+                  个人中心
+                </Link>
+              </div>
               <div className="content" onClick={this.logout}>退出登录</div>
             </div>
           </div>

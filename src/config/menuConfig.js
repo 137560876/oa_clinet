@@ -51,6 +51,11 @@ const menuList = [
     key: "/power",
     icon: "1",
   },
+  {
+    title: "通知",
+    key: "/notice",
+    icon: "2",
+  },
 ];
 
 export default menuList;

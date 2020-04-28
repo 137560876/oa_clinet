@@ -19,6 +19,7 @@ import FlowApro from '../../inner-page/flow/flow-apro/flow-apro';
 import SignIn from '../../inner-page/sign-in/sign-in';
 import Person from '../../inner-page/person/person';
 import Power from '../../inner-page/power/power';
+import Notice from '../../inner-page/notice/notice';
 
 
 const { Content } = Layout;
@@ -50,6 +51,7 @@ export default class User extends React.Component {
                   <Route path='/flowapply' component={FlowApply}></Route>
                   <Route path='/flowall' component={FlowAll}></Route>
                   <Route path='/flowapro' component={FlowApro}></Route>
+                  <Route path='/notice' component={Notice}></Route>
                   <Route path='/person' component={Person}></Route>
                   <Route path='/power' component={Power}></Route>
                   <Redirect to='/myhome'></Redirect>
