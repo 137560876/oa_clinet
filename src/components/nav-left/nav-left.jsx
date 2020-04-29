@@ -1,5 +1,7 @@
 import React from 'react'
-import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons';
+import { UserOutlined, ContainerOutlined, TabletOutlined, SwitcherOutlined, UserDeleteOutlined,
+  ForkOutlined, HomeOutlined, LaptopOutlined, NotificationOutlined, UserAddOutlined,
+  BulbOutlined, DeploymentUnitOutlined, ApartmentOutlined, BellOutlined } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import { Link, withRouter } from 'react-router-dom';
 import menuList from '../../config/menuConfig';
@@ -9,7 +11,18 @@ const { Sider } = Layout;
 const iconList = [
   <UserOutlined />,
   <LaptopOutlined />,
-  <NotificationOutlined />
+  <NotificationOutlined />,
+  <HomeOutlined />,
+  <ContainerOutlined />,
+  <ForkOutlined />,
+  <TabletOutlined />,
+  <SwitcherOutlined />,
+  <BulbOutlined />,
+  <DeploymentUnitOutlined />,
+  <ApartmentOutlined />,
+  <BellOutlined />,
+  <UserAddOutlined />,
+  <UserDeleteOutlined />,
 ]
 
 

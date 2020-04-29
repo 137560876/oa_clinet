@@ -1,9 +1,12 @@
 import React from 'react';
-import { Card, Table, Button, Modal, Descriptions, Timeline } from 'antd';
+import { Card, Table, Button, Modal, Descriptions, Timeline, Collapse } from 'antd';
 import { getFlow } from '../../../../mock/loginMock';
 import { reqFlowList } from '../../../../api/link';
 import TimeDiv from '../../../../components/time-line-div/time-line-div';
 import './flow.less';
+
+const { Panel } = Collapse;
+
 
 export default class Flow extends React.Component {
 
@@ -141,32 +144,36 @@ export default class Flow extends React.Component {
           </Card>
           <div style={{ height: "10px" }}></div>
           <Card style={{ paddingLeft: '15px', paddingRight: '15px' }}>
-            <Timeline>
-              <Timeline.Item color="green">
-                <TimeDiv
-                  view={"发起"}
-                  person={"阿秀"}
-                  type={"移动应用开发部主管"}
-                  time={"2020-4-1 16:30"}
-                />
-              </Timeline.Item>
-              <Timeline.Item color="green">
-                <TimeDiv
-                  view={"同意，加油"}
-                  person={"小青"}
-                  type={"移动应用开发部主管"}
-                  time={"2020-4-1 16:30"}
-                />
-              </Timeline.Item>
-              <Timeline.Item color="red">
-                <TimeDiv
-                  view={"退回，假种信息不正确"}
-                  person={"阿秀"}
-                  type={"部门经理"}
-                  time={"2020-4-1 16:30"}
-                />
-              </Timeline.Item>
-            </Timeline>
+            <Collapse>
+              <Panel header="流程表" key="1">
+                <Timeline>
+                  <Timeline.Item color="green">
+                    <TimeDiv
+                      view={"发起"}
+                      person={"阿秀"}
+                      type={"移动应用开发部主管"}
+                      time={"2020-4-1 16:30"}
+                    />
+                  </Timeline.Item>
+                  <Timeline.Item color="green">
+                    <TimeDiv
+                      view={"同意，加油"}
+                      person={"小青"}
+                      type={"移动应用开发部主管"}
+                      time={"2020-4-1 16:30"}
+                    />
+                  </Timeline.Item>
+                  <Timeline.Item color="red">
+                    <TimeDiv
+                      view={"退回，假种信息不正确"}
+                      person={"阿秀"}
+                      type={"部门经理"}
+                      time={"2020-4-1 16:30"}
+                    />
+                  </Timeline.Item>
+                </Timeline>
+              </Panel>
+            </Collapse>
           </Card>
         </Modal>
         <Card title="我的流程" >
