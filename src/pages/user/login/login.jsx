@@ -6,9 +6,6 @@ import memoryUtils from '../../../utils/memoryUtils';
 import storageUtils from '../../../utils/strorageUtils';
 import { Redirect } from 'react-router-dom';
 
-//引入mock
-
-import { test } from '../../../mock/loginMock'
 
 /**
  * @description: 登录的路由组件
@@ -44,7 +41,7 @@ export default class Login extends React.Component {
 
   //点击登录事件
   async handleClick() {
-    test();
+    //test();
     let username = this.username.value;
     let password = this.password.value;
     //前台判断是否符合标准
@@ -53,11 +50,13 @@ export default class Login extends React.Component {
       const response = await reqlogin(username, password)
       //判断登录是否成功
       const result = response;
-      if (result.statu === 200) {
+      if (result.code === 200) {
+        
+
         message.success("登录成功");
         //跳转到主页面
         //登录信息存储到内存
-        const user = result
+        const user = result.datas[0]
         memoryUtils.user = user;
         storageUtils.saveUser(user);
         this.props.history.replace('/user');
@@ -67,9 +66,8 @@ export default class Login extends React.Component {
 
     } else {
       this.inputError("登陆失败", "请填写用户名或密码");
-    } 
+    }
   }
-
 
   render() {
     //用户已登录自动跳转到管理

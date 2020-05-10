@@ -13,6 +13,7 @@
     "less": "^3.11.1",
     "less-loader": "^5.0.0",
     "mockjs": "^1.1.0",
+    "qs": "^6.9.3",
     "react": "^16.13.1",
     "react-app-rewired": "^2.1.5",
     "react-dom": "^16.13.1",
@@ -41,5 +42,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://yapi.demo.qunar.com/mock/101385"
+  "proxy": "http://localhost:8080"
 }

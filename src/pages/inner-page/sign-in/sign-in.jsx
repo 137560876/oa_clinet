@@ -1,6 +1,8 @@
 import React from 'react';
 import { Calendar, Statistic, Tag, Modal, Button, Alert, Steps } from 'antd';
 import { formateDate } from '../../../utils/timeUtils';
+import { reqGetSignList, reqUpSign, reqOutSign } from '../../../api/link';
+import memoryUtils from '../../../utils/memoryUtils';
 import moment from 'moment';
 import './sign-in.less';
 
@@ -10,47 +12,11 @@ export default class SignIn extends React.Component {
 
 
   state = {
+    userId: 0,
     visible: false,
     confirmLoading: false,
     currentTime: formateDate(Date.now()),//当前时间字符串
-    signList: [
-      {
-        date: '2020-04-01',
-        go: '8:00',
-        out: '17:00',
-        goS: 'finish',//上班正常
-        outS: 'finish', //下班正常
-        status: 0,//正常 green
-        step: 2, //打卡进度 0为上班 1为下班 2为全流程结束
-      },
-      {
-        date: '2020-04-02',
-        go: '10:00',
-        out: '17:00',
-        goS: 'error',//上班异常
-        outS: 'finish', //下班正常
-        status: 1,//异常
-        step: 2,
-      },
-      {
-        date: '2020-04-03',
-        go: '',
-        out: '',
-        goS: 'wait',
-        outS: 'wait',
-        status: 2,//请假
-        step: 2,
-      },
-      {
-        date: '2020-04-24',
-        go: '',
-        out: '',
-        goS: 'process',
-        outS: 'wait',
-        status: 3,//流程还未完全结束 状态设为3
-        step: 0,
-      }
-    ],//后端请求打卡数据
+    signList: [],//后端请求打卡数据
 
     thisGoS: 'wait',//某日的上班情况 0默认wait
     thisOutS: 'wait',//某日下班情况 0默认wait
@@ -67,17 +33,17 @@ export default class SignIn extends React.Component {
     var time = this.state.signList.find(function (e) { return e.date === selectDay })
     if (time !== undefined) {
       switch (time.status) {
-        case 0:
+        case 1:
           listData = [
             { color: 'green', content: '正常' }
           ];
           break;
-        case 1:
+        case 2:
           listData = [
             { color: 'red', content: '迟到' }
           ];
           break;
-        case 2:
+        case 3:
           listData = [
             { color: 'blue', content: '请假' }
           ];
@@ -104,9 +70,9 @@ export default class SignIn extends React.Component {
 
   onPanelChange = (value) => {
     var thisDay = moment(value).format('YYYY-MM-DD');
-    
+
     var time = this.state.signList.find(function (e) { return e.date === thisDay }); //查找当日打卡情况
-    
+
     if (time !== undefined) {
       this.setState({
         thisGoS: time.goS,//某日的上班情况 0默认
@@ -116,7 +82,7 @@ export default class SignIn extends React.Component {
         thisDay: thisDay, //对话框的日期
         step: time.step,//对话框当前步骤，默认0
       })
-      
+
       if (thisDay === moment().locale('zh-cn').format('YYYY-MM-DD')) {
         this.setState({
           isNowDay: 'inline'
@@ -155,9 +121,9 @@ export default class SignIn extends React.Component {
   //点击按钮 提交打卡事务
   handleClick = () => {
     var thisDay = moment().locale('zh-cn').format('YYYY-MM-DD');
-    
+
     var time = this.state.signList.find(function (e) { return e.date === thisDay }); //查找当日打卡情况
-    
+
     if (time !== undefined) {
       this.setState({
         thisGoS: time.goS,//某日的上班情况 0默认
@@ -167,12 +133,12 @@ export default class SignIn extends React.Component {
         thisDay: thisDay, //对话框的日期
         step: time.step,//对话框当前步骤，默认0
       })
-      
+
       if (thisDay === moment().locale('zh-cn').format('YYYY-MM-DD')) {
         this.setState({
           isNowDay: 'inline'
         })
-      } 
+      }
     } else {
       this.setState({
         thisGoS: 'wait',//某日的上班情况 0默认
@@ -187,7 +153,7 @@ export default class SignIn extends React.Component {
         this.setState({
           isNowDay: 'inline'
         })
-      } 
+      }
     }
 
     this.setState({
@@ -202,8 +168,18 @@ export default class SignIn extends React.Component {
     });
   }
 
-  //关闭对话框
-  handleClose = () => {
+  //打卡
+  async handleClose() {
+    //上班打卡
+    if (this.state.step === 0) {
+      await reqUpSign(this.state.userId);
+    }
+    //下班打卡
+    if (this.state.step === 1) {
+      await reqOutSign(this.state.userId);
+    }
+
+    this.getSignList(this.state.userId);
     this.setState({
       visible: false,
     });
@@ -219,8 +195,76 @@ export default class SignIn extends React.Component {
     }, 1000)
   }
 
+  close() {
+    this.setState({
+      visible: false,
+    });
+  }
+
+  async getSignList(userId) {
+    const response = await reqGetSignList(userId);
+    if (response.code === 200) {
+      var list = response.datas;
+      var signList = [];
+      for (let i in list) {
+        var statu = 0;
+        var goS = 'wait';
+        var outS = 'wait';
+
+        /* 处理上下班状态 */
+        if (list[i].goStatus === 1) {
+          goS = 'finish';
+        }
+
+        if (list[i].goStatus === 2) {
+          goS = 'error';
+        }
+        if (list[i].outStatus === 1) {
+          outS = 'finish';
+        }
+
+        if (list[i].outStatus === 2) {
+          outS = 'error';
+        }
+        if (list[i].goStatus === 1 && list[i].outStatus === 1) {
+          statu = 1;
+        }
+        if (list[i].goStatus === 3 && list[i].outStatus === 3) {
+          statu = 3;
+        }
+        if (list[i].goStatus === 2 && list[i].outStatus === 2) {
+          statu = 2;
+        }
+        let sign = {
+          date: list[i].date,
+          go: list[i].goTime,
+          out: list[i].outTime,
+          goS: goS,//上班正常
+          outS: outS, //下班正常
+          status: statu,//正常 green
+          step: list[i].step, //打卡进度 0为上班 1为下班 2为全流程结束
+        }
+        signList.push(sign)
+      }
+
+      this.setState({
+        signList: signList,
+      });
+    }
+
+
+
+  }
+
+
   componentDidMount() {
     this.getTime();
+    this.setState({
+      userId: memoryUtils.user.id,
+    });
+    this.userId = memoryUtils.user.id;
+    this.getSignList(this.userId);
+
   }
 
   /**
@@ -243,7 +287,7 @@ export default class SignIn extends React.Component {
           onCancel={this.handleCancel}
           footer={
             [
-              <Button key="back" type="primary" onClick={this.handleClose}>关闭</Button>,
+              <Button key="back" type="primary" onClick={() => this.close()}>关闭</Button>,
             ]
           }>
 
@@ -259,7 +303,7 @@ export default class SignIn extends React.Component {
           </Steps>
           <Button
             type="primary"
-            onClick={this.handleClose}
+            onClick={() => this.handleClose()}
             style={{ marginTop: 10, marginBottom: 20, height: 40, fontWeight: "bolder", display: this.state.isNowDay }}
             block>
             打卡  {moment().format('HH:mm:ss')}</Button>

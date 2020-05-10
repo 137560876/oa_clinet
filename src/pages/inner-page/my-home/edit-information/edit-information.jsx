@@ -3,6 +3,8 @@ import './edit-information.less';
 import { Card, Descriptions, Avatar, Input, Select, Button, Upload, message } from 'antd';
 import { UserOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import memoryUtils from '../../../../utils/memoryUtils';
+import strorageUtils from '../../../../utils/strorageUtils';
+import { reqChangeInformation, reqFindUser } from '../../../../api/link';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -28,10 +30,85 @@ function beforeUpload(file) {
 export default class EditInformation extends React.Component {
   state = {
     loading: false,
+    
+    phone: null,
+    email: null,
+    address: null,
+    status: 1,
+    message: null,
   };
 
-  UNSAFE_componentWillMount() {
-    this.userIcom = memoryUtils.user.icon;
+
+  change(e, f) {
+    switch (f) {
+      case 1:
+        let tem1 =e.target.value;
+        if (tem1.length < 1) {
+         tem1 = null; 
+        }
+        this.setState({
+          phone: tem1,
+        });
+        break;
+      case 2:
+        let tem2 =e.target.value;
+        if (tem2.length < 1) {
+         tem2 = null; 
+        }
+        this.setState({
+          email: tem2,
+        });
+        break;
+      case 3:
+        let tem3 =e.target.value;
+        if (tem3.length < 1) {
+         tem3 = null; 
+        }
+        this.setState({
+          address: tem3,
+        });
+        break;
+      case 4:
+        let tem4 =e.target.value;
+        if (tem4.length < 1) {
+         tem4 = null; 
+        }
+        this.setState({
+          message: tem4,
+        });
+        break;
+      default:
+        break;
+    }
+
+
+  }
+
+  statusChange = (value) => {
+    this.setState({
+      status: value,
+    })
+  }
+
+  async changeInformation (id, phone, email, address, status, message) {
+    const response = await reqChangeInformation(id, phone, email, address, status, message);
+    if(response.code === 200) {
+      const response2 = await reqFindUser(memoryUtils.user.username);
+      const user = response2.data;
+      console.log(user);
+      
+      memoryUtils.user = user;
+      strorageUtils.saveUser(user);
+    } 
+    
+    
+  }
+
+  //提交事件
+  handleclick() {
+    console.log(this.state.phone, this.state.email, this.state.address, this.state.status, this.state.message);
+    this.changeInformation(memoryUtils.user.id, this.state.phone, this.state.email, this.state.address, this.state.status, this.state.message)
+    
   }
 
   handleChange = (info) => {
@@ -49,6 +126,23 @@ export default class EditInformation extends React.Component {
       );
     }
   };
+
+  //设置初始值
+  setValue() {
+    this.setState({
+      status: memoryUtils.user.status,
+    })
+  }
+
+  UNSAFE_componentWillMount() {
+    this.userIcom = memoryUtils.user.icon;
+  }
+
+  componentDidMount () {
+    this.setValue();
+    console.log(memoryUtils.user);
+    
+  }  
 
   render() {
     const uploadButton = (
@@ -97,19 +191,20 @@ export default class EditInformation extends React.Component {
                 <Descriptions.Item label="姓名">青渊渊</Descriptions.Item>
                 <Descriptions.Item label="部门">测试部</Descriptions.Item>
                 <Descriptions.Item label="联系电话">
-                  <Input defaultValue='15988821971' placeholder="请输入电话号码" />
+                  <Input onChange={(e) => this.change(e, 1)} placeholder="请输入电话号码" />
                 </Descriptions.Item>
                 <Descriptions.Item label="电子邮箱">
-                  <Input defaultValue='137560876@qq.com' placeholder="请输入电子邮箱" />
+                  <Input onChange={(e) => this.change(e, 2)} placeholder="请输入电子邮箱" />
                 </Descriptions.Item>
                 <Descriptions.Item label="工作位置">
-                  <Input defaultValue='总公司7楼 28-5' placeholder="输入工位位置" />
+                  <Input onChange={(e) => this.change(e, 3)} placeholder="输入工位位置" />
                 </Descriptions.Item>
                 <Descriptions.Item label="当前状态">
-                  <Select defaultValue="1" style={{ marginLeft: '28px', width: 120 }}>
-                    <Option value="1">空闲</Option>
-                    <Option value="2">繁忙</Option>
-                    <Option value="3">出差</Option>
+                  <Select onChange={(value) => this.statusChange(value)} defaultValue={this.state.status} style={{ marginLeft: '28px', width: 120 }}>
+                    
+                    <Option value={1}>空闲</Option>
+                    <Option value={2}>繁忙</Option>
+                    <Option value={3}>出差</Option>
                   </Select>
                 </Descriptions.Item>
               </Descriptions>
@@ -121,7 +216,7 @@ export default class EditInformation extends React.Component {
                   </div>
                 <div>
                   <TextArea
-                    defaultValue={"无留言"}
+                    onChange={(e) => this.change(e, 4)}
                     autoSize={{ minRows: 4, maxRows: 8 }}
                     style={{ marginLeft: '28px', width: 400 }}
                   />
@@ -129,7 +224,7 @@ export default class EditInformation extends React.Component {
               </div>
 
               <div className="bt-container">
-                <Button type="primary" style={{ margin: '0 10px' }}>提交</Button>
+                <Button type="primary" onClick={() => this.handleclick() } style={{ margin: '0 10px' }}>提交</Button>
               </div>
             </Card>
           </div>
