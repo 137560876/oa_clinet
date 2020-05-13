@@ -17,7 +17,7 @@ export function test() {
 
 export function power() {
   Mock.mock("/getqx", {
-      powerList: ['0-0-0-0', '0-0-0-2', '0-1-0-2'],
+      powerList: [1, 2, 3],
     })
 }
 

@@ -4,6 +4,7 @@ import { Layout, Modal } from 'antd';
 import { Avatar } from 'antd';
 import { UserOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import memoryUtils from '../../utils/memoryUtils';
+import menuUtils from '../../utils/menuUtils';
 import strorageUtils from '../../utils/strorageUtils';
 import './header.less'
 
@@ -28,7 +29,9 @@ class HeaderTop extends React.Component {
       onOk: () => {
         //删除保存的user
         strorageUtils.removeUser();
+        strorageUtils.removePower();
         memoryUtils.user = {};
+        menuUtils.menuList = [];
         //跳转到登录
         this.props.history.replace('/login')
 

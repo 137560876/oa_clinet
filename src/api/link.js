@@ -17,11 +17,22 @@ export const reqAddNewUser = (
   email,
   address,
   sex,
-  message
+  message,
+  departmentId
 ) =>
   ajax(
     "/exp/user/add",
-    { username, password, name, phone, email, address, sex, message },
+    {
+      username,
+      password,
+      name,
+      phone,
+      email,
+      address,
+      sex,
+      message,
+      departmentId,
+    },
     "POST"
   );
 
@@ -79,7 +90,99 @@ export const reqPublishNotice = (userId, title, context, level) =>
 export const reqFindUser = (username) =>
   ajax("/exp/user/getUserByUsername", { username }, "GET");
 
-export const reqNotice = (id) => ajax("/exp/notice/getNoticeDetail", { id }, "GET");
+//delete user
+export const reqdeleteUser = (username) =>
+  ajax("/exp/user/delete", { username }, "POST");
+
+export const reqNotice = (id) =>
+  ajax("/exp/notice/getNoticeDetail", { id }, "GET");
+
+export const reqGetPermission = (userId) =>
+  ajax("/exp/permission/getPermissionByUserId", { userId }, "GET");
+
+export const reqChangePower = (id, list) =>
+  ajax("/exp/permission/updatePermission", { id, list }, "POST");
+
+export const reqGetAllFlow = (startPosition, limit) =>
+  ajax("/exp/flow/getAllFlowList", { startPosition, limit }, "GET");
+
+export const reqGetAllNum = () => ajax("/exp/flow/getAllNum", {}, "GET");
+
+export const reqGetMyFlow = (startPosition, limit, userId) =>
+  ajax("/exp/flow/getListByUserId", { startPosition, limit, userId }, "GET");
+
+export const reqGetMyNum = (id) => ajax("/exp/flow/getMyNum", { id }, "GET");
+
+export const reqGetAproFlow = (startPosition, limit, userId) =>
+  ajax("/exp/flow/getAproFlowList", { startPosition, limit, userId }, "GET");
+
+export const reqGetAproNum = (id) =>
+  ajax("/exp/flow/getAproNum", { id }, "GET");
+
+export const reqFindFlowById = (id) =>
+  ajax("/exp/flow/findFlowById", { id }, "GET");
+
+export const reqGetFlowMain = (id) =>
+  ajax("/exp/flow/getFlowMain", { id }, "GET");
+
+export const reqAddFlow = (
+  title,
+  userId,
+  userName,
+  nextUserId,
+  nextUsername,
+  startHms,
+  startDate,
+  endDate,
+  endHms,
+  cost,
+  type,
+  status,
+  remark
+) =>
+  ajax(
+    "/exp/flow/addFlow",
+    {
+      title,
+      userId,
+      userName,
+      nextUserId,
+      nextUsername,
+      startHms,
+      startDate,
+      endDate,
+      endHms,
+      cost,
+      type,
+      status,
+      remark,
+    },
+    "POST"
+  );
+
+export const reqStopFlow = (userId, id) =>
+  ajax("/exp/flow/stop", { userId, id }, "POST");
+
+//apro
+export const reqAproFlow = (
+  userId,
+  flowId,
+  status,
+  remark,
+  nextUser,
+  nextName
+) =>
+  ajax(
+    "/exp/flow/apro",
+    { userId, flowId, status, remark, nextUser, nextName },
+    "POST"
+  );
+
+export const reqGetTrueNum = (id) => ajax("/exp/sign/trueNum", { id }, "GET");
+
+export const reqGetErrorNum = (id) => ajax("/exp/sign/errorNum", { id }, "GET");
+
+export const reqGetLeaveNum = (id) => ajax("/exp/sign/leaveNum", { id }, "GET");
 
 export const reqPower = () => ajax("/getqx", {}, "Get");
 

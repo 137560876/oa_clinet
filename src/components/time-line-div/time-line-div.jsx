@@ -10,7 +10,7 @@ export default class TimeLineDiv extends React.Component {
       <div className="time-line-div">
         <div className="status">{this.props.view}</div>
         <div className="person">
-          <span style={{marginRight: '70px'}}>{this.props.person}</span> <span>{this.props.type}</span>
+          处理人 : <span style={{marginRight: '70px'}}>{this.props.person}</span>
         </div>
         <div className="line"></div>
         <div>

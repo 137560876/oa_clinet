@@ -1,94 +1,23 @@
 import React from 'react';
 import './cancel-user.less';
+import { withRouter } from 'react-router-dom';
 import { Tree, Descriptions, Card, Button, Divider, Modal } from 'antd';
+import { formatStatus } from '../../../utils/statusUtils';
+import { reqdeleteUser, reqFindUser, reqGetDepartmentList, reqGetUserListByDepartmentId } from '../../../api/link';
 import {
-  ExclamationCircleOutlined,
+  HomeOutlined,
   DownOutlined,
-  SmileOutlined,
-  MehOutlined,
+  ApartmentOutlined,
+  UserOutlined,
+  ExclamationCircleOutlined,
 } from '@ant-design/icons';
 
-const treeData = [
 
-  {
-    title: '公司总部',
-    key: '0',
-    isPerson: false,
-    icon: <SmileOutlined />,
-    children: [
-      {
-        title: '研发组',
-        key: '0-0',
-        isPerson: false,
-        icon: <MehOutlined />,
-        children: [
-          {
-            title: '开发人员1',
-            key: '0-0-0',
-            name: '开发人员1',
-            part: '总公司',
-            tel: '1234567',
-            mail: '1237@qq.com',
-            addr: '7楼 28-1',
-            status: '空闲',
-            command: '开发人员1的留言',
-            isPerson: true,
-            icon: <MehOutlined />,
-          },
-          {
-            title: '开发人员2',
-            key: '0-0-1',
-            name: '开发人员2',
-            part: '总公司',
-            tel: '12345678',
-            mail: '1237@qq.com',
-            addr: '7楼 28-2',
-            status: '繁忙',
-            command: '开发人员2的留言',
-            isPerson: true,
-            icon: <MehOutlined />,
-          },
-          {
-            title: '开发人员3',
-            key: '0-0-2',
-            name: '开发人员3',
-            part: '总公司',
-            tel: '1234567',
-            mail: '1237@qq.com',
-            addr: '7楼 28-3',
-            status: '空闲',
-            command: '开发人员3的留言',
-            isPerson: true,
-            icon: <MehOutlined />,
-          },
-        ]
-      },
-      {
-        title: '产品组',
-        key: '0-1',
-        isPerson: false,
-        icon: <MehOutlined />,
-      },
-      {
-        title: '测试组',
-        key: '0-2',
-        isPerson: false,
-        icon: <MehOutlined />,
-      },
-      {
-        title: '测开组',
-        key: '0-3',
-        isPerson: false,
-        icon: <MehOutlined />,
-      }
-    ]
-  }
-];
-
-export default class CancelUser extends React.Component {
+class CancelUser extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      plist: [],
       name: '',
       part: '',
       tel: '',
@@ -96,10 +25,34 @@ export default class CancelUser extends React.Component {
       addr: '',
       status: '',
       command: '',
+      tree: [],
+
+      deleteUsername: '',
     };
 
   }
 
+  //获取个人信息
+  async getPerson(username) {
+    const response = await reqFindUser(username);
+
+    this.setState({
+      name: response.data.name,
+      tel: response.data.phone,
+      mail: response.data.email,
+      addr: response.data.address,
+      status: formatStatus(response.data.status),
+      command: response.data.message,
+    })
+
+  }
+
+  //删除用户
+  async deleteUser(username) {
+    const response = await reqdeleteUser(username);
+    console.log(response);
+    
+  }  
 
   //点击注销按钮
   handelCancel = () => {
@@ -110,31 +63,133 @@ export default class CancelUser extends React.Component {
       cancelText: '取消',
       onOk: () => {
         //删除
-
+        console.log(this.state.deleteUsername);
+        
+        this.deleteUser(this.state.deleteUsername);
+        this.props.history.replace('/new-user');
+        
       },
       onCancel() {
       },
     });
   }
 
+  //鼠标点击节点事件
   onSelect = (selectedKeys, info) => {
+
     if (info.node.isPerson) {
       this.setState({
-        name: info.node.name,
-        part: info.node.part,
-        tel: info.node.tel,
-        mail: info.node.mail,
-        addr: info.node.addr,
-        status: info.node.status,
-        command: info.node.command,
+        deleteUsername: info.node.username,
       })
+      
+    } else {
+      console.log("选中了", info.node.title);
     }
   }
 
+  //处理列表
+  formatList(list, obj) {
+
+    for (let i in list) {
+
+      if (list[i].parentId === obj.key) {
+
+        let newObj = {
+          title: list[i].name,
+          key: list[i].id,
+          isPerson: false,
+          icon: <ApartmentOutlined />,
+          parentId: list[i].parentId,
+          children: [],
+        }
+        if (obj.children === undefined) {
+          obj.children = [];
+          obj.children.push(newObj);
+        } else {
+          obj.children.push(newObj);
+        }
+        this.formatList(list, newObj);
+      }
+    }
+  }
+
+  //获得列表
+  async getDepartmentList() {
+    const response = await reqGetDepartmentList();
+
+    var formatList = []
+    //添加code判断
+    var departmentList = response.datas;
+
+    this.setState({
+      plist: departmentList,
+    })
+    for (let i in departmentList) {
+      //第一级
+      if (departmentList[i].parentId === 0) {
+        let obj = {
+          title: departmentList[i].name,
+          key: departmentList[i].id,
+          isPerson: false,
+          icon: <HomeOutlined />,
+          parentId: departmentList[i].parentId,
+        }
+        formatList.push(obj);
+        this.formatList(departmentList, obj);
+      }
+    }
+
+
+
+    this.setState({
+      tree: formatList,
+    })
+
+  }
+
+  //异步加载数据
+  onLoadData = (treeNode) => {
+
+    return new Promise(resolve => {
+
+      reqGetUserListByDepartmentId(treeNode.key).then(
+        resposne => {
+          const addlist = resposne.datas;
+          for (let k in addlist) {
+            let obj = {
+              title: addlist[k].name,
+              key: addlist[k].id + 10000,
+              username: addlist[k].username,
+              isPerson: true,
+              isLeaf: true,
+              icon: <UserOutlined />,
+              parentId: treeNode.key,
+            }
+            if (treeNode.children) {
+              treeNode.children.push(obj);
+            } else {
+              treeNode.children = [];
+              treeNode.children.push(obj);
+            }
+
+          }
+          this.setState({
+            tree: [...this.state.tree],
+          });
+          resolve();
+        }
+      )
+
+
+    });
+
+  }
+
   componentDidMount() {
+    this.getDepartmentList();
     this.setState({
       name: '青渊渊',
-      part: '测试部',
+      part: '',
       tel: '15988812345',
       mail: '137000@qq.com',
       addr: '总公司7楼 28-5',
@@ -151,11 +206,10 @@ export default class CancelUser extends React.Component {
           <Tree
             showIcon
             onSelect={this.onSelect}
-            defaultExpandAll
+            loadData={this.onLoadData}
             height={540}
-            defaultSelectedKeys={['0-0-0']}
             switcherIcon={<DownOutlined />}
-            treeData={treeData}
+            treeData={this.state.tree}
           />
         </div>
         <div className="space-80"></div>
@@ -184,3 +238,5 @@ export default class CancelUser extends React.Component {
     );
   }
 }
+
+export default withRouter(CancelUser);

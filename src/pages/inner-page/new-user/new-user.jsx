@@ -11,10 +11,11 @@ export default class NewUser extends React.Component {
   state = {
     value: undefined,
 
+    departmentId: undefined,
     username: "",
     password: "",
     name: "",
-    partment: "",
+    partment: 0,
     phone: "",
     email: "",
     address: "",
@@ -68,16 +69,17 @@ export default class NewUser extends React.Component {
   }
 
   //提交新增用户事务
-  async addNewUser(username, password, name, phone, email, address, sex, message) {
-    const response = await reqAddNewUser(username, password, name, phone, email, address, sex, message);
+  async addNewUser(username, password, name, phone, email, address, sex, message, departmentId) {
+    const response = await reqAddNewUser(username, password, name, phone, email, address, sex, message, departmentId);
     console.log(response);
 
   }
 
   //点击事件
   handleClick() {
+    
     this.addNewUser(this.state.username, this.state.password, this.state.name, this.state.phone,
-      this.state.email, this.state.address, this.state.sex, this.state.message);
+      this.state.email, this.state.address, this.state.sex, this.state.message, this.state.departmentId);
 
 
   }
@@ -92,7 +94,7 @@ export default class NewUser extends React.Component {
 
   onChange = (value) => {
     console.log(value);
-    this.setState({ value });
+    this.setState({ departmentId: value });
   };
 
   //处理列表
@@ -173,7 +175,7 @@ export default class NewUser extends React.Component {
                 <Descriptions.Item label="部门">
                   <TreeSelect
                     style={{ marginLeft: '28px', width: '220px' }}
-                    value={this.state.value}
+                    value={this.state.departmentId}
                     dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
                     treeData={this.state.tree}
                     placeholder="请选择"

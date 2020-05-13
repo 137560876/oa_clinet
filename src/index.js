@@ -5,6 +5,7 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import StorageUtils from "./utils/strorageUtils";
 import memoryUtils from "./utils/memoryUtils";
+import menuUtils from "./utils/menuUtils";
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 import zhCN from 'antd/es/locale/zh_CN';
@@ -13,7 +14,9 @@ import { ConfigProvider } from "antd";
 moment.locale('zh-cn');
 //内存中读取登录信息
 const user = StorageUtils.getUser();
+const list = StorageUtils.getPower();
 memoryUtils.user = user;
+menuUtils.menuList = list;
 
 ReactDOM.render(
   <ConfigProvider locale={zhCN}>

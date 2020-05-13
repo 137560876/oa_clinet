@@ -1,181 +1,162 @@
 import React from 'react';
 import './power.less';
-import { Tree, Button, Modal } from 'antd';
-import { power } from '../../../mock/loginMock';
-import { reqPower } from '../../../api/link';
+import { Tree, Button } from 'antd';
+import menuList from '../../../config/menuConfig';
+import { reqChangePower, reqGetPermission, reqGetDepartmentList, reqGetUserListByDepartmentId } from '../../../api/link';
 import {
+  HomeOutlined,
   DownOutlined,
-  SmileOutlined,
-  MehOutlined,
+  ApartmentOutlined,
+  UserOutlined,
   SwapOutlined,
 } from '@ant-design/icons';
 
-
-const powerData = [
-  {
-    title: '0-0',
-    key: '0-0',
-    type: 0,//0为列表 1为权限
-    children: [
-      {
-        title: '0-0-0',
-        key: '0-0-0',
-        type: 0,
-        children: [
-          { title: '0-0-0-0', key: '0-0-0-0', type: 1 },
-          { title: '0-0-0-1', key: '0-0-0-1', type: 1 },
-          { title: '0-0-0-2', key: '0-0-0-2', type: 1 },
-        ],
-      },
-      {
-        title: '0-0-1',
-        key: '0-0-1',
-        type: 0,
-        children: [
-          { title: '0-0-1-0', key: '0-0-1-0', type: 1 },
-          { title: '0-0-1-1', key: '0-0-1-1', type: 1 },
-          { title: '0-0-1-2', key: '0-0-1-2', type: 1 },
-        ],
-      },
-      {
-        title: '0-0-2',
-        key: '0-0-2',
-        type: 0,
-      },
-    ],
-  },
-  {
-    title: '0-1',
-    key: '0-1',
-    type: 0,
-    children: [
-      { title: '0-1-0-0', key: '0-1-0-0', type: 1 },
-      { title: '0-1-0-1', key: '0-1-0-1', type: 1 },
-      { title: '0-1-0-2', key: '0-1-0-2', type: 1 },
-    ],
-  },
-  {
-    title: '0-2',
-    key: '0-2',
-    type: 0,
-  },
-];
-
-
-const treeData = [
-
-  {
-    title: '公司总部',
-    key: '0',
-    isPerson: false,
-    icon: <SmileOutlined />,
-    children: [
-      {
-        title: '研发组',
-        key: '0-0',
-        isPerson: false,
-        icon: <MehOutlined />,
-        children: [
-          {
-            title: '开发人员1',
-            key: '0-0-0',
-            name: '开发人员1',
-            part: '总公司',
-            tel: '1234567',
-            mail: '1237@qq.com',
-            addr: '7楼 28-1',
-            status: '空闲',
-            command: '开发人员1的留言',
-            isPerson: true,
-            icon: <MehOutlined />,
-          },
-          {
-            title: '开发人员2',
-            key: '0-0-1',
-            name: '开发人员2',
-            part: '总公司',
-            tel: '12345678',
-            mail: '1237@qq.com',
-            addr: '7楼 28-2',
-            status: '繁忙',
-            command: '开发人员2的留言',
-            isPerson: true,
-            icon: <MehOutlined />,
-          },
-          {
-            title: '开发人员3',
-            key: '0-0-2',
-            name: '开发人员3',
-            part: '总公司',
-            tel: '1234567',
-            mail: '1237@qq.com',
-            addr: '7楼 28-3',
-            status: '空闲',
-            command: '开发人员3的留言',
-            isPerson: true,
-            icon: <MehOutlined />,
-          },
-        ]
-      },
-      {
-        title: '产品组',
-        key: '0-1',
-        isPerson: false,
-        icon: <MehOutlined />,
-      },
-      {
-        title: '测试组',
-        key: '0-2',
-        isPerson: false,
-        icon: <MehOutlined />,
-      },
-      {
-        title: '测开组',
-        key: '0-3',
-        isPerson: false,
-        icon: <MehOutlined />,
-      }
-    ]
-  }
-];
 
 
 export default class Power extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: '',
-      part: '',
-      tel: '',
-      mail: '',
-      addr: '',
-      status: '',
-      command: '',
       nowUserPowers: [],
-      checkedKeys: ['0-0-0-0'],
+      checkedKeys: [],
+      willKeys: [],
+      tree: [],
+      nowUser: undefined,
     };
+
+  }
+
+  //处理列表
+  formatList(list, obj) {
+
+    for (let i in list) {
+
+      if (list[i].parentId === obj.key) {
+
+        let newObj = {
+          title: list[i].name,
+          key: list[i].id,
+          isPerson: false,
+          icon: <ApartmentOutlined />,
+          parentId: list[i].parentId,
+          children: [],
+        }
+        if (obj.children === undefined) {
+          obj.children = [];
+          obj.children.push(newObj);
+        } else {
+          obj.children.push(newObj);
+        }
+        this.formatList(list, newObj);
+      }
+    }
+  }
+
+  //获得列表
+  async getDepartmentList() {
+    const response = await reqGetDepartmentList();
+
+    var formatList = []
+    //添加code判断
+    var departmentList = response.datas;
+
+    this.setState({
+      plist: departmentList,
+    })
+    for (let i in departmentList) {
+      //第一级
+      if (departmentList[i].parentId === 0) {
+        let obj = {
+          title: departmentList[i].name,
+          key: departmentList[i].id,
+          isPerson: false,
+          icon: <HomeOutlined />,
+          parentId: departmentList[i].parentId,
+        }
+        formatList.push(obj);
+        this.formatList(departmentList, obj);
+      }
+    }
+    this.setState({
+      tree: formatList,
+    })
+
+  }
+
+  onLoadData = (treeNode) => {
+
+    return new Promise(resolve => {
+
+      reqGetUserListByDepartmentId(treeNode.key).then(
+        resposne => {
+
+          const addlist = resposne.datas;
+          for (let k in addlist) {
+
+            let obj = {
+              id: addlist[k].id,
+              title: addlist[k].name,
+              key: addlist[k].id + 10000,
+              username: addlist[k].username,
+              isPerson: true,
+              isLeaf: true,
+              icon: <UserOutlined />,
+              parentId: treeNode.key,
+            }
+
+            if (treeNode.children) {
+              treeNode.children.push(obj);
+            } else {
+              treeNode.children = [];
+              treeNode.children.push(obj);
+              console.log(treeNode);
+
+            }
+
+          }
+          this.setState({
+            tree: [...this.state.tree],
+          });
+          resolve();
+        }
+      )
+
+
+    });
 
   }
 
   onCheck = (checkedKeys, info) => {
     var powerList = [];
+    var willList = [];
     info.checkedNodes.forEach(item => {
-
-      if (item.type === 1) {
-        powerList.push(item.key);
+      powerList.push(item.key);
+      willList.push(item.key);
+      if(item.parentId !== 0 && willList.indexOf(item.parentId) === -1) {
+        willList.push(item.parentId);
       }
     });
+    this.setState({
+      willKeys: willList,
+    })
+    
     this.setcheckedKeys(powerList);
   }
 
   //获取用户权限的方法
-  async getPowerList() {
-    power();
-    const response = await reqPower();
-    console.log(response.powerList);
+  async getPowerList(id) {
+
+    const response = await reqGetPermission(id);
+    const rlist = response.datas;
+
+    let powerList = [];
+    for (let i in rlist) {
+      powerList.push(rlist[i].id);
+    }
+
     this.setState({
-      nowUserPowers: response.powerList,
-      checkedKeys: response.powerList,
+      nowUserPowers: powerList,
+      checkedKeys: powerList,
     })
   }
 
@@ -186,21 +167,26 @@ export default class Power extends React.Component {
     })
   }
 
+  //向后台发起更新权限请求
+  async changeUserPower(id, list) {
+    const response = await reqChangePower(id, list);
+    console.log(response);
+    
+  }
+
+  //点击事件
   onSelect = (selectedKeys, info) => {
-    console.log(selectedKeys);
+
     if (info.node.isPerson) {
-      this.setState({
-        name: info.node.name,
-        part: info.node.part,
-        tel: info.node.tel,
-        mail: info.node.mail,
-        addr: info.node.addr,
-        status: info.node.status,
-        command: info.node.command,
-      })
 
       //后端发起请求获取拥有的权限
-      this.getPowerList();
+      this.getPowerList(info.node.id);
+      this.setState({
+        nowUser: info.node.id,
+      })
+    } else {
+      console.log("选中了:" + info.node.title);
+
     }
   }
 
@@ -212,10 +198,15 @@ export default class Power extends React.Component {
 
   //按下修改按钮后向服务器发起修改
   changePower = () => {
-    Modal.success({
-      title: '修改用户权限成功',
-      okText: '确认',
-    });
+    if (this.state.nowUser !== undefined) {
+      console.log(this.state.nowUser, this.state.checkedKeys);
+      
+      this.changeUserPower(this.state.nowUser, this.state.checkedKeys);
+    }
+  }
+
+  componentDidMount() {
+    this.getDepartmentList();
   }
 
   render() {
@@ -226,10 +217,10 @@ export default class Power extends React.Component {
           <Tree
             showIcon
             onSelect={this.onSelect}
-            defaultExpandAll
+            loadData={this.onLoadData}
             height={540}
             switcherIcon={<DownOutlined />}
-            treeData={treeData}
+            treeData={this.state.tree}
           />
         </div>
         <div className="icon-container">
@@ -242,7 +233,7 @@ export default class Power extends React.Component {
             height={540}
             checkedKeys={this.state.checkedKeys}
             defaultExpandAll
-            treeData={powerData}
+            treeData={menuList}
           />
         </div>
         <div className="bt-container">

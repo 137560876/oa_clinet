@@ -1,10 +1,16 @@
 import React from 'react'
-import { UserOutlined, ContainerOutlined, TabletOutlined, SwitcherOutlined, UserDeleteOutlined,
+import {
+  UserOutlined, ContainerOutlined, TabletOutlined, SwitcherOutlined, UserDeleteOutlined,
   ForkOutlined, HomeOutlined, LaptopOutlined, NotificationOutlined, UserAddOutlined,
-  BulbOutlined, DeploymentUnitOutlined, ApartmentOutlined, BellOutlined } from '@ant-design/icons';
+  BulbOutlined, DeploymentUnitOutlined, ApartmentOutlined, BellOutlined
+} from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import { Link, withRouter } from 'react-router-dom';
-import menuList from '../../config/menuConfig';
+import { reqGetPermission } from '../../api/link';
+import memoryUtils from '../../utils/memoryUtils';
+import menuUtils from '../../utils/menuUtils';
+import strorageUtils from '../../utils/strorageUtils';
+
 
 const { SubMenu } = Menu;
 const { Sider } = Layout;
@@ -27,6 +33,14 @@ const iconList = [
 
 
 class NavLeft extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      menuNodes: [],
+    };
+
+  }
+
 
   /**
    * 根据menuList的数组生成菜单
@@ -72,8 +86,74 @@ class NavLeft extends React.Component {
     })
   }
 
-  UNSAFE_componentWillMount () {
-    this.menuNodes = this.getMenuNodes(menuList);
+  //处理列表
+  formatList(list, obj) {
+
+    for (let i in list) {
+
+      if (list[i].parentId === obj.id) {
+
+        let newObj = {
+          title: list[i].name,
+          key: list[i].key,
+          icon: list[i].icon,
+          parentId: list[i].parentId,
+        }
+        if (obj.children === undefined) {
+          obj.children = [];
+          obj.children.push(newObj);
+        } else {
+          obj.children.push(newObj);
+        }
+        //this.formatList(list, newObj);
+      }
+    }
+  }
+
+  //根据用户id获取权限
+  async getPermission(userId) {
+
+    const response = await reqGetPermission(userId);
+    const powerList = response.datas;
+    const formatList = []
+    for (let i in powerList) {
+      if (powerList[i].parentId === 0) {
+        let newObj = {
+          id: powerList[i].id,
+          title: powerList[i].name,
+          key: powerList[i].key,
+          icon: powerList[i].icon,
+          parentId: powerList[i].parentId,
+        }
+        this.formatList(powerList, newObj);
+        formatList.push(newObj);
+      }
+    }
+    return formatList;
+  }
+
+  UNSAFE_componentWillMount() {
+    const userId = memoryUtils.user.id;
+
+    if (!menuUtils.menuList || menuUtils.menuList.length === 0) {
+      console.log("请求权限");
+      
+      this.getPermission(userId).then((formatList) => {
+        strorageUtils.savePower(formatList);
+        console.log(formatList);
+        const menuNodes = this.getMenuNodes(formatList);
+        this.setState({
+          menuNodes: menuNodes,
+        })
+      });
+    } else {
+      console.log("读取历史的权限");
+      const menuNodes = this.getMenuNodes(menuUtils.menuList);
+      this.setState({
+        menuNodes: menuNodes,
+      })
+      
+    }
   }
 
   render() {
@@ -82,7 +162,7 @@ class NavLeft extends React.Component {
     const openKey = this.openKey;
 
     return (
-      <Sider width={200} className="site-layout-background" style={{paddingTop: "28px"}}>
+      <Sider width={200} className="site-layout-background" style={{ paddingTop: "28px" }}>
         <Menu
           mode="inline"
           selectedKeys={[path]}
@@ -90,7 +170,7 @@ class NavLeft extends React.Component {
           style={{ height: '100%', borderRight: 0 }}
         >
           {
-            this.menuNodes
+            this.state.menuNodes
           }
 
         </Menu>

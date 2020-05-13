@@ -1,7 +1,7 @@
 import React from 'react';
 import { Calendar, Statistic, Tag, Modal, Button, Alert, Steps } from 'antd';
 import { formateDate } from '../../../utils/timeUtils';
-import { reqGetSignList, reqUpSign, reqOutSign } from '../../../api/link';
+import { reqGetSignList, reqUpSign, reqOutSign, reqGetTrueNum, reqGetErrorNum, reqGetLeaveNum } from '../../../api/link';
 import memoryUtils from '../../../utils/memoryUtils';
 import moment from 'moment';
 import './sign-in.less';
@@ -25,6 +25,10 @@ export default class SignIn extends React.Component {
     isNowDay: 'none', //对话框显示日期是否为今日
     thisDay: '2020-4-1', //对话框的日期
     step: 0,//对话框当前步骤，默认0
+
+    trueNum: undefined,
+    errorNum: undefined,
+    leaveNum: undefined,
   }
 
   getListData = (value) => {
@@ -256,6 +260,17 @@ export default class SignIn extends React.Component {
 
   }
 
+  async getNum(id) {
+    const response1 = await reqGetTrueNum(id);
+    const response2 = await reqGetErrorNum(id);
+    const response3 = await reqGetLeaveNum(id);
+    this.setState({
+      trueNum: response1.count,
+      errorNum: response2.count,
+      leaveNum: response3.count,
+    })
+    
+  }
 
   componentDidMount() {
     this.getTime();
@@ -264,7 +279,7 @@ export default class SignIn extends React.Component {
     });
     this.userId = memoryUtils.user.id;
     this.getSignList(this.userId);
-
+    this.getNum(memoryUtils.user.id);
   }
 
   /**
@@ -323,7 +338,7 @@ export default class SignIn extends React.Component {
               <div className="box-card">
                 <Statistic
                   title="正常打卡"
-                  value={11}
+                  value={this.state.trueNum}
                   valueStyle={{ color: '#66CC99' }}
                   suffix="次"
                 />
@@ -331,7 +346,7 @@ export default class SignIn extends React.Component {
               <div className="box-card">
                 <Statistic
                   title="异常打卡"
-                  value={9}
+                  value={this.state.errorNum}
                   valueStyle={{ color: '#F00000' }}
                   suffix="次"
                 />
@@ -339,7 +354,7 @@ export default class SignIn extends React.Component {
               <div className="box-card">
                 <Statistic
                   title="请假次数"
-                  value={9}
+                  value={this.state.leaveNum}
                   valueStyle={{ color: '#66CCFF' }}
                   suffix="次"
                 />

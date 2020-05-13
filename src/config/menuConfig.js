@@ -3,78 +3,93 @@
  * @description 菜单配置
  */
 
+
 const menuList = [
   {
     title: "签到",
-    key: "/sign",
-    icon: "8",
+    key: 1,
+    type: 1,
+    parentId: 0,
   },
   {
     title: "个人信息", //标题
-    key: "/myhome", //对应path
-    icon: "3", //图标
+    key: 2, //对应path
+    type: 1,
+    parentId: 0,
   },
   {
     title: "工作流",
-    key: "/work",
-    icon: "1",
+    key: 3,
+    type: 0,
+    parentId: 0,
     children: [
       {
         title: "请假申请",
-        key: "/leave",
-        icon: "4",
+        key: 4,
+        type: 1,
+        parentId: 3,
       },
       {
         title: "流程申请",
-        key: "/flowapply",
-        icon: "5",
+        key: 5,
+        type: 1,
+        parentId: 3,
       },
       {
         title: "我的流程",
-        key: "/myflow",
-        icon: "0",
+        key: 6,
+        type: 1,
+        parentId: 3,
       },
       {
         title: "我的审批",
-        key: "/flowapro",
-        icon: "6",
+        key: 7,
+        type: 1,
+        parentId: 3,
       },
       {
         title: "全部流程",
-        key: "/flowall",
-        icon: "7",
+        key: 8,
+        type: 1,
+        parentId: 3,
       },
     ],
   },
   {
     title: "人员通讯",
-    key: "/person",
-    icon: "0",
+    key: 9,
+    type: 1,
+    parentId: 0,
   },
   {
     title: "管理",
-    key: "/per",
-    icon: "9",
+    key: 10,
+    type: 0,
+    parentId: 0,
     children: [
       {
         title: "权限管理",
-        key: "/power",
-        icon: "10",
+        key: 11,
+        type: 1,
+        parentId: 10,
       },
       {
         title: "发布通知",
-        key: "/push-notice",
-        icon: "11",
+        key: 12,
+        type: 1,
+        parentId: 10,
       },
       {
         title: "添加新员工",
-        key: "/new-user",
-        icon: "12",
+        key: 13,
+        type: 1,
+        parentId: 10,
       },
       {
         title: "注销员工账号",
-        key: "/cancel-user",
-        icon: "13",
+        key: 14,
+        type: 1,
+        parentId: 10,
       },
 
     ],
@@ -82,8 +97,9 @@ const menuList = [
   
   {
     title: "通知",
-    key: "/notice",
-    icon: "2",
+    key: 15,
+    type: 1,
+    parentId: 0,
   },
 ];
 

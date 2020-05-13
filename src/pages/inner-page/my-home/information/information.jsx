@@ -88,7 +88,7 @@ export default class Information extends React.Component {
 
   componentDidMount() {
     
-    //this.getWeither();
+    this.getWeither();
     this.setState({
       name: memoryUtils.user.name,
       position: memoryUtils.user.position,
