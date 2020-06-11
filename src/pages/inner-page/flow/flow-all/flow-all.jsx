@@ -61,15 +61,20 @@ export default class FlowAll extends React.Component {
 
   //获取全部流程
   async getDataSource(start, limit) {
+
     this.setState({
       loading: true,
     })
+    const response1 = await reqGetAllNum();
+    this.setState({
+      num: response1.count,
+    });
     const response = await reqGetAllFlow((start - 1) * 5, limit);
     let formatList = response.datas;
-    for(let i in formatList) {
+    for (let i in formatList) {
       formatList[i].status = formatStatus(formatList[i].status);
     }
-    
+
     this.setState({
       dataSource: formatList,
       pagination: {
@@ -86,6 +91,7 @@ export default class FlowAll extends React.Component {
   //获取流程时间图
   async getFlowMain(id) {
     const response = await reqGetFlowMain(id);
+    
     const list = response.datas;
     let listNode = [];
     for (let i in list) {
@@ -110,7 +116,7 @@ export default class FlowAll extends React.Component {
           </Timeline.Item>
         )
       }
-      
+
     }
 
     this.setState({
@@ -156,14 +162,13 @@ export default class FlowAll extends React.Component {
   //获取数据总数
   async getNum() {
     const response = await reqGetAllNum();
-    console.log(response.count);
     this.setState({
       num: response.count,
-    })
+    });
   }
 
   componentDidMount() {
-    this.getNum();
+    //this.getNum();
     this.getDataSource(1, 5);
   }
 
@@ -253,7 +258,7 @@ export default class FlowAll extends React.Component {
               <Panel header="流程表" key="1">
                 <Timeline>
                   {this.state.flow}
-                  
+
                 </Timeline>
               </Panel>
             </Collapse>
