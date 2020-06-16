@@ -32,9 +32,11 @@ export default class SignIn extends React.Component {
   }
 
   getListData = (value) => {
+    
     let listData = [];
     var selectDay = moment(value).format('YYYY-MM-DD');
     var time = this.state.signList.find(function (e) { return e.date === selectDay })
+    
     if (time !== undefined) {
       switch (time.status) {
         case 1:
@@ -53,6 +55,7 @@ export default class SignIn extends React.Component {
           ];
           break;
         default:
+          break;
       }
     }
 
@@ -237,6 +240,12 @@ export default class SignIn extends React.Component {
           statu = 3;
         }
         if (list[i].goStatus === 2 && list[i].outStatus === 2) {
+          statu = 2;
+        }
+        if (list[i].goStatus === 1 && list[i].outStatus === 2) {
+          statu = 2;
+        }
+        if (list[i].goStatus === 2 && list[i].outStatus === 1) {
           statu = 2;
         }
         let sign = {

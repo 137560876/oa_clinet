@@ -1,9 +1,10 @@
 import React from 'react';
 import './new-user.less';
-import { Card, Descriptions, Input, Select, TreeSelect, Button } from 'antd';
+import { Modal, Card, Descriptions, Input, Select, TreeSelect, Button } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { reqAddNewUser, reqGetDepartmentList } from '../../../api/link';
 
-
+const { confirm } = Modal;
 const { Option } = Select;
 const { TextArea } = Input;
 
@@ -68,19 +69,54 @@ export default class NewUser extends React.Component {
 
   }
 
+  su() {
+    confirm({
+      title: '添加用户成功',
+      icon: <ExclamationCircleOutlined />,
+      onOk() {
+        console.log('OK');
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  }
+
+  fa() {
+    confirm({
+      title: '添加用户失败',
+      icon: <ExclamationCircleOutlined />,
+      onOk() {
+        console.log('OK');
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  }
+
   //提交新增用户事务
   async addNewUser(username, password, name, phone, email, address, sex, message, departmentId) {
     const response = await reqAddNewUser(username, password, name, phone, email, address, sex, message, departmentId);
-    console.log(response);
+
+    return response;
 
   }
 
   //点击事件
   handleClick() {
-    
-    this.addNewUser(this.state.username, this.state.password, this.state.name, this.state.phone,
+
+    let re = this.addNewUser(this.state.username, this.state.password, this.state.name, this.state.phone,
       this.state.email, this.state.address, this.state.sex, this.state.message, this.state.departmentId);
 
+    re.then((response) => {
+      if (response.code === 200) {
+        this.su();
+      } else {
+        this.fa();
+      }
+
+    })
 
   }
 
@@ -142,7 +178,7 @@ export default class NewUser extends React.Component {
     }
 
     console.log(formatList);
-    
+
     this.setState({
       tree: formatList,
     })

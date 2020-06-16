@@ -91,6 +91,7 @@ export default class Flow extends React.Component {
     const response = await reqGetFlowMain(id);
     const list = response.datas;
     let listNode = [];
+    
     for (let i in list) {
       if (list[i].status === 0) {
         listNode.push(
@@ -102,7 +103,19 @@ export default class Flow extends React.Component {
             />
           </Timeline.Item>
         )
-      } else {
+      } 
+      else if (list[i].status === 3) {
+        listNode.push(
+          <Timeline.Item key={list[i].userId} color={colorStatus(list[i].status)}>
+            <TimeDiv
+              view={"已撤回"}
+              person={list[i].userName}
+              time={list[i].time}
+            />
+          </Timeline.Item>
+        )
+      }
+      else {
         listNode.push(
           <Timeline.Item key={list[i].userId} color={colorStatus(list[i].status)}>
             <TimeDiv
@@ -124,6 +137,7 @@ export default class Flow extends React.Component {
 
   //点击查看详情时间
   handleMore = (record) => {
+    console.log(record)
     console.log(record.id);
     this.getFlow(record.id);
     this.getFlowMain(record.id);
@@ -172,7 +186,6 @@ export default class Flow extends React.Component {
   //获取数据总数
   async getNum() {
     const response = await reqGetMyNum(memoryUtils.user.id);
-    console.log(response.count);
     this.setState({
       num: response.count,
     })
@@ -231,7 +244,7 @@ export default class Flow extends React.Component {
           <div className="run-container">
 
             <Button type="primary" onClick={() => this.handleMore(record)} size={"small"} style={{ margin: "0 5px" }}>查看</Button>
-            <Button type="primary" onClick={() => this.handleDelete(record)} size={"small"} style={{ margin: "0 5px" }}>撤回</Button>
+            <Button type="primary" onClick={() => this.handleDelete(record)} size={"small"} style={{ margin: "0 5px", display: record.status === "正常"? "inline":"none" }}>撤回</Button>
           </div>
         ,
       }
